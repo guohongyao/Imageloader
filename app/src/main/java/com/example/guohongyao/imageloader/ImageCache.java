@@ -27,6 +27,7 @@ public class ImageCache {
         };
 
     }
+
     public void put(String imageUrl,Bitmap bitmap){
         imageCache.put(imageUrl,bitmap);
     }
