@@ -8,7 +8,7 @@ import android.util.LruCache;
  */
 public class ImageCache {
     //图片缓存
-    private LruCache<String,Bitmap> mImageCache;
+    private LruCache<String,Bitmap> imageCache;
 
     public ImageCache() {
         initImageLoader();
@@ -18,7 +18,7 @@ public class ImageCache {
         int maxMemory= (int) (Runtime.getRuntime().maxMemory()/1024);
         //取四分之一的可用内存作为缓存
         int cacheSize=maxMemory/4;
-        mImageCache=new LruCache<String,Bitmap>(cacheSize){
+        imageCache=new LruCache<String,Bitmap>(cacheSize){
             @Override
             protected int sizeOf(String key, Bitmap value) {
                 //重写此方法来衡量每张图片的大小，默认返回图片数量。
@@ -28,9 +28,9 @@ public class ImageCache {
 
     }
     public void put(String imageUrl,Bitmap bitmap){
-        mImageCache.put(imageUrl,bitmap);
+        imageCache.put(imageUrl,bitmap);
     }
     public Bitmap get(String imageUrl){
-        return mImageCache.get(imageUrl);
+        return imageCache.get(imageUrl);
     }
 }
