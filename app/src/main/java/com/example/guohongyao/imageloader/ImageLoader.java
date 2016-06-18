@@ -16,28 +16,14 @@ import java.util.concurrent.Executors;
  * Created by GuoHongyao on 2016/6/18.
  */
 public class ImageLoader {
-    //图片缓存
-    private LruCache<String,Bitmap> mImageCache;
+    private ImageCache imageCache;
     //线程池，线程数量为CPU的数量
     private ExecutorService executorService= Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     public ImageLoader() {
-        initImageLoader();
+        imageCache=new ImageCache();
     }
 
-    private void initImageLoader() {
-        //计算可使用最大内存，使用内存超出这个值会引起OutOfMemory异常
-        int maxMemory= (int) (Runtime.getRuntime().maxMemory()/1024);
-        //取四分之一的可用内存作为缓存
-        int cacheSize=maxMemory/4;
-        mImageCache=new LruCache<String,Bitmap>(cacheSize){
-            @Override
-            protected int sizeOf(String key, Bitmap value) {
-                //重写此方法来衡量每张图片的大小，默认返回图片数量。
-                return value.getRowBytes()*value.getHeight()/1024;
-            }
-        };
 
-    }
 
     public void displayImage(final String imageUrl, final ImageView imageView) {
         imageView.setTag(imageUrl);
@@ -51,7 +37,7 @@ public class ImageLoader {
                 if(imageView.getTag()==imageUrl){
                     imageView.setImageBitmap(bitmap);
                 }
-                mImageCache.put(imageUrl,bitmap);
+                imageCache.put(imageUrl,bitmap);
             }
         });
     }
