@@ -2,7 +2,6 @@ package com.example.guohongyao.imageloader;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.LruCache;
 import android.widget.ImageView;
 
 import java.io.IOException;
@@ -16,23 +15,17 @@ import java.util.concurrent.Executors;
  * Created by GuoHongyao on 2016/6/18.
  */
 public class ImageLoader {
-    //内存缓存
-    private ImageCache imageCache = new ImageCache();
-    //SD卡缓存
-    DiskCache diskCache = new DiskCache();
-    //是否使用SD卡缓存
-    boolean isUseDiskCache = false;
+    //图片缓存
+    ImageCache imageCache = new MemoryCache();
     //线程池，线程数量为CPU的数量
     private ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
-    public ImageLoader() {
-        imageCache = new ImageCache();
+    //注入实现缓存
+    public void setImageCache(ImageCache imageCache) {
+        this.imageCache = imageCache;
     }
 
-
     public void displayImage(final String imageUrl, final ImageView imageView) {
-        imageView.setTag(imageUrl);
-        Bitmap bitmap = isUseDiskCache ? diskCache.get(imageUrl) : imageCache.get(imageUrl);
+        Bitmap bitmap=imageCache.get(imageUrl);
         if(bitmap==null) {
             executorService.submit(new Runnable() {
                 @Override
@@ -42,9 +35,10 @@ public class ImageLoader {
                         return;
                     }
                     showImage(bitmap, imageView, imageUrl);
+                    imageCache.put(imageUrl, bitmap);
                 }
             });
-        }else{
+        } else {
             showImage(bitmap, imageView, imageUrl);
         }
     }
@@ -53,7 +47,6 @@ public class ImageLoader {
         if (imageView.getTag() == imageUrl) {
             imageView.setImageBitmap(bitmap);
         }
-        imageCache.put(imageUrl, bitmap);
     }
 
     public Bitmap downloadImage(String imageUrl) {

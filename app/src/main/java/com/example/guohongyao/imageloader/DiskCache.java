@@ -10,14 +10,15 @@ import java.io.IOException;
 /**
  * Created by GuoHongyao on 2016/6/19.
  */
-public class DiskCache {
+public class DiskCache implements ImageCache {
     private String cacheDir = "sdcard/cache/";
 
-
+    @Override
     public Bitmap get(String imageUrl) {
         return BitmapFactory.decodeFile(cacheDir + imageUrl);
     }
 
+    @Override
     public void put(String imageUrl, Bitmap bitmap) {
         FileOutputStream fileOutputStream = null;
         try {
