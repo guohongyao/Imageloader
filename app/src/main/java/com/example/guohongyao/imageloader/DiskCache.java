@@ -3,6 +3,7 @@ package com.example.guohongyao.imageloader;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import java.io.Closeable;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,13 +29,7 @@ public class DiskCache implements ImageCache {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
-            if (fileOutputStream != null) {
-                try {
-                    fileOutputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            CloseUtils.closeQuickly(fileOutputStream);
         }
 
     }
