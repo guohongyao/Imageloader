@@ -12,17 +12,7 @@ public class Tenant {
     public static final float diffArea=0.0f;
 
     public void rentRoom(Mediator mediator){
-        List<Room> rooms=mediator.getAllRooms();
-        for(Room room:rooms){
-            if(isSuitable(room)){
-                System.out.println("OK_"+room);
-                break;
-            }
-        }
+        System.out.println("OK_"+mediator.rentRoom(roomArea,roomPrice));
     }
 
-    private boolean isSuitable(Room room) {
-        return Math.abs(room.price-roomPrice)<diffPrice
-                &&Math.abs(room.area-roomArea)<diffArea;
-    }
 }

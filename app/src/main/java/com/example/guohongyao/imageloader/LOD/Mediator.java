@@ -17,4 +17,18 @@ public class Mediator {
     public List<Room> getAllRooms(){
         return rooms;
     }
+    public Room rentRoom(float area,float price){
+        List<Room> rooms=getAllRooms();
+        for(Room room:rooms){
+            if(isSuitable(area,price,room)){
+                return room;
+            }
+        }
+        return null;
+    }
+
+    private boolean isSuitable(float area,float price,Room room) {
+        return Math.abs(room.price-price)<Tenant.diffPrice
+                &&Math.abs(room.area-area)<Tenant.diffArea;
+    }
 }
